@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基于深度学习的无人垃圾捕捞船系统</title>
+    <link rel="stylesheet" href="/static/index.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="shortcut icon" href="/static/favicon.png" type="image/x-icon">
+    <script src="/static/index.js"></script>
+    <script src="/static/getscript.js"></script>
+    <script src="/static/echarts.min.js"></script>
+    <script src="/static/jquery-3.4.1.min.js"></script>
+</head>
+
+<body>
+    <div class="main-page">
+        <div class="box-wrap">
+            <div class="box map-content">
+                <div id="mapContainer">
+                </div>
+            </div>
+            <div class="box video-content">
+                <img id="ImagePic" alt="Base64 encoded image" width="640" height="480" src="../static/bg.png" />
+            </div>
+            <div class="box echart-box">
+                <div id="echart-1"></div>
+                <script type="text/javascript">
+                    // 基于准备好的dom，初始化echarts实例
+                    var myChart1 = echarts.init(document.getElementById('echart-1'));
+                    echart1_data = 64;
+                    // 指定图表的配置项和数据
+                    myChart1.setOption({
+                        tooltip: {
+                            formatter: "{a}: <br/>{b} {c}%",
+                        },
+                        toolbox: {
+                            feature: {}
+                        },
+                        series: [{
+                            name: '左电机转速',
+                            type: 'gauge',
+                            detail: {
+                                formatter: '{value}%',
+                                textStyle: {
+                                    fontSize: 24,
+                                    color: '#fff',
+                                },
+                                offsetCenter: ['0', '56'],
+                            },
+                            data: [{
+                                value: echart1_data,
+                            }]
+                        }],
+                    });
+                </script>
+                <div id="echart-2"></div>
+                <div style="clear: both;float:left;width: 276px; margin-left: 20px; margin-top: 20px;color: #fff">左电机转速</div>
+                <div style="float: left;width: 276px; margin-left: 86px; margin-top: 20px;color: #fff">右电机转速</div>
+                <script type="text/javascript">
+                    // 基于准备好的dom，初始化echarts实例
+                    var myChart2 = echarts.init(document.getElementById('echart-2'));
+                    // 指定图表的配置项和数据
+                    echart2_data = 10
+                    myChart2.setOption({
+                        tooltip: {
+                            formatter: "{a}: <br/>{b} {c}%"
+                        },
+                        toolbox: {
+                            feature: {}
+                        },
+                        series: [{
+                            name: '右电机转速',
+                            type: 'gauge',
+                            detail: {
+                                formatter: '{value}%',
+                                textStyle: {
+                                    fontSize: 24,
+                                    color: '#fff',
+                                },
+                                offsetCenter: ['0', '56'],
+                            },
+                            data: [{
+                                value: echart2_data,
+                            }]
+                        }]
+                    });
+                </script>
+            </div>
+            <div class="box content-box-1">
+                <div style="margin-top: 5px">
+                    <span class="name">水温</span>
+                    <span class="value waterTemp">25.2</span>
+                    <span class="unit">&#8451;</span>
+                </div>
+                <div>
+                    <span class="name">水质浊度</span>
+                    <span class="value waterTurb">1.5</span>
+                    <span class="unit">NTU</span>
+                </div>
+                <div>
+                    <span class="name">水位</span>
+                    <span class="value waterLevel">101</span>
+                    <span class="unit">cm</span>
+                </div>
+                <div>
+                    <span class="name airHumidityName">空气湿度</span>
+                    <span class="value airHumidity">35</span>
+                    <span class="unit">RH</span>
+                </div>
+            </div>
+            <div class="box content-box-2">
+                <div class="content-box-2-left">
+                    <div>
+                        <span class="motor-index">时间</span>
+                        <span class="motor-value gpstime">10:12:13</span>
+                    </div>
+                    <div>
+                        <span class="motor-index">经度</span>
+                        <span class="motor-value longitude">102.86</span>
+                    </div>
+                    <div>
+                        <span class="motor-index">纬度</span>
+                        <span class="motor-value latitude">24.85</span>
+                    </div>
+                    <div>
+                        <span class="motor-index">海拔</span>
+                        <span class="motor-value altitude">1951</span>
+                    </div>
+                </div>
+
+                <div class="content-box-2-right">
+                    <div>
+                        <span class="motor-index">左电机转速</span>
+                        <span class="motor-value motor-left">50%</span>
+                    </div>
+                    <div>
+                        <span class="motor-index">右电机转速</span>
+                        <span class="motor-value motor-right">80%</span>
+                    </div>
+                    <div>
+                        <span class="motor-index">左电池电量</span>
+                        <span class="motor-value battery-left">90%</span>
+                    </div>
+                    <div>
+                        <span class="motor-index">右电池电量</span>
+                        <span class="motor-value battery-right">92%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="box camera_control" id="camera_control" style="margin-bottom: 62px;">
+                <button class="top drectionBtn">Up</button>
+                <button class="stop drectionBtn">STOP</button>
+                <br>
+                <button class="left drectionBtn">Left</button>
+                <button class="right drectionBtn">Right</button>
+                <br>
+                <button class="bottom drectionBtn">Down</button>
+                <div class="switch-content">
+                    <div class="manualBtn">Manual</div>
+                    <label class="switch">
+                        <input type="checkbox" class="switchBtn" value="">
+                        <div class="slider"></div>
+                    </label>
+                    <div class="autoBtn">Auto</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script type="text/javascript">
+    function refresh_data() {
+        $.getJSON("getmotordata", function (data) {
+            $(".waterTemp").html(data.waterTemp);
+            $(".waterTurb").html(data.waterTurb);
+            $(".waterLevel").html(data.waterLevel);
+            $(".airHumidity").html(data.airHumidity);
+            $(".gpstime").html(data.gpstime);
+            $(".longitude").html(data.longitude);
+            $(".latitude").html(data.latitude);
+            $(".altitude").html(data.altitude);
+            $(".motor-left").html(data.motorLeft);
+            $(".motor-right").html(data.motorRight);
+            $(".battery-left").html(data.batteryLeft);
+            $(".battery-right").html(data.batteryRight);
+            myChart1.setOption({
+                        tooltip: {
+                            formatter: "{a}: <br/>{b} {c}%",
+                        },
+                        toolbox: {
+                            feature: {}
+                        },
+                        series: [{
+                            name: '左电机转速',
+                            type: 'gauge',
+                            detail: {
+                                formatter: '{value}%',
+                                textStyle: {
+                                    fontSize: 24,
+                                    color: '#fff',
+                                },
+                                offsetCenter: ['0', '56'],
+                            },
+                            data: [{
+                                value: parseFloat(data.motorLeft),
+                            }]
+                        }],
+                    });
+            myChart2.setOption({
+                        tooltip: {
+                            formatter: "{a}: <br/>{b} {c}%"
+                        },
+                        toolbox: {
+                            feature: {}
+                        },
+                        series: [{
+                            name: '右电机转速',
+                            type: 'gauge',
+                            detail: {
+                                formatter: '{value}%',
+                                textStyle: {
+                                    fontSize: 24,
+                                    color: '#fff',
+                                },
+                                offsetCenter: ['0', '56'],
+                            },
+                            data: [{
+                                value: parseFloat(data.motorRight),
+                            }]
+                        }]
+                    });
+        })
+    }
+    setInterval("refresh_data()", "1000");
+</script>
+
+<script>
+    $('button').click(function (e) {
+        post_data = {
+            "direction": e.target.outerText,
+        }
+        $.ajax({
+            url: "./getdirection",
+            type: "post",
+            data: post_data,
+            success: function () {
+                console.log("发送成功" + post_data.direction)
+            },
+            error: function () {
+                console.log("服务器请求超时,请重试!")
+            }
+        });
+    })
+</script>
+<script>
+    $('.switchBtn').click(function () {
+        if ($(".switchBtn").is(":checked")) {
+            switch_data = 'Auto'
+        } else {
+            switch_data = 'Manual'
+        }
+        post_switch = {
+            switch_data: switch_data
+        }
+        $.ajax({
+            url: "./getmode",
+            type: "POST",
+            data: post_switch,
+            success: function () {
+                console.log("发送成功" + post_switch.switch_data)
+            },
+            error: function () {
+                console.log("服务器请求超时,请重试!")
+            }
+        });
+    })
+</script>
+
+<!-- <script>
+    function image_reflesh() {
+        $("#ImagePic").attr("src", "http://127.0.0.1:8000/first/getmotion?t=" + Math.random());
+    }
+    setInterval('image_reflesh()', 100)
+</script> -->
+
+<script>
+    var map = new BMap.Map("mapContainer");
+    map.enableScrollWheelZoom(true);
+    var point = new BMap.Point(102.864163, 24.856442);
+    map.centerAndZoom(point, 16);
+    map.addControl(new BMap.NavigationControl());
+    map.addOverlay(new BMap.Marker(point));
+</script>
+
+</html>
